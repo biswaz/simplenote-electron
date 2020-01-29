@@ -12,6 +12,11 @@ const filteredNotes: A.Reducer<T.NoteEntity[]> = (
   action
 ) => ('FILTER_NOTES' === action.type ? action.notes : state);
 
+const unsyncedNoteIds: A.Reducer<T.EntityId[]> = (
+  state = emptyList as T.EntityId[],
+  action
+) => ('SET_UNSYNCED_NOTE_IDS' === action.type ? action.noteIds : state);
+
 const simperiumConnected: A.Reducer<boolean> = (state = false, action) =>
   'SIMPERIUM_CONNECTION_STATUS_TOGGLE' === action.type
     ? action.simperiumConnected
@@ -33,5 +38,6 @@ const visiblePanes: A.Reducer<string[]> = (
 export default combineReducers({
   filteredNotes,
   simperiumConnected,
+  unsyncedNoteIds,
   visiblePanes,
 });

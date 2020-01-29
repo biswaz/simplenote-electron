@@ -30,7 +30,10 @@ import {
   pick,
   values,
 } from 'lodash';
-import { toggleSimperiumConnectionStatus } from './state/ui/actions';
+import {
+  setUnsyncedNoteIds,
+  toggleSimperiumConnectionStatus,
+} from './state/ui/actions';
 
 import * as settingsActions from './state/settings/actions';
 
@@ -85,6 +88,7 @@ function mapDispatchToProps(dispatch, { noteBucket }) {
       dispatch(actionCreators.setSearchFocus({ searchFocus: true })),
     setSimperiumConnectionStatus: connected =>
       dispatch(toggleSimperiumConnectionStatus(connected)),
+    setUnsyncedNoteIds: noteIds => dispatch(setUnsyncedNoteIds(noteIds)),
   };
 }
 
@@ -286,11 +290,11 @@ export const App = connect(
     };
 
     onNotesIndex = () => {
-      const { noteBucket } = this.props;
-      const { loadNotes, setUnsyncedNoteIds } = this.props.actions;
+      const { noteBucket, setUnsyncedNoteIds } = this.props;
+      const { loadNotes } = this.props.actions;
 
       loadNotes({ noteBucket });
-      setUnsyncedNoteIds({ noteIds: getUnsyncedNoteIds(noteBucket) });
+      setUnsyncedNoteIds(getUnsyncedNoteIds(noteBucket));
     };
 
     onNoteRemoved = () => this.onNotesIndex();
@@ -369,16 +373,14 @@ export const App = connect(
       activityHooks(data, {
         onIdle: () => {
           const {
-            actions: { setUnsyncedNoteIds },
             appState: { notes },
             client,
             noteBucket,
+            setUnsyncedNoteIds,
           } = this.props;
 
           nudgeUnsynced({ client, noteBucket, notes });
-          setUnsyncedNoteIds({
-            noteIds: getUnsyncedNoteIds(noteBucket),
-          });
+          setUnsyncedNoteIds(getUnsyncedNoteIds(noteBucket));
         },
       });
     };
