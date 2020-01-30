@@ -237,6 +237,10 @@ export const App = connect(
         exportZipArchive();
       }
 
+      if ('printNote' === command.action) {
+        return window.print();
+      }
+
       const canRun = overEvery(
         isObject,
         o => o.action !== null,
